@@ -16,14 +16,14 @@ You can integrate this shader into your project in two ways:
 1. Download the [`/Assets`](./Assets) folder from this repository.
 2. Copy the contents directly into your project's `Assets/` directory.
 3. Folder structure overview:
-    * HLSL: Hand-written `VFXShader.shader` file and noise functions
-    * Scripts: C# script for the custom Inspector GUI
-    * ShaderGraph: Shader graph and its subgraphs
+    * HLSL: Hand-written `VFXShader.shader` file and noise functions,
+    * Scripts: C# script for the custom Inspector GUI,
+    * ShaderGraph: Shader graph and its subgraphs.
 
 ## How to Use
 #### 1. Applying the Shader
 Create a new Material and select the shader from the dropdown menu depending on which version you want to use:
-* **Shader Graph version:** `Shader Graphs -> VFX_ShaderGraph` (or *CullOff* version).
+* **Shader Graph version:** `Shader Graphs -> VFX_ShaderGraph` (or *CullOff* version),
 * **HLSL version:** `Unlit -> VFXShader`.
 
 #### 2. Mandatory Particle System Setup
@@ -44,12 +44,12 @@ The shader utilizes a custom graphical user interface `VFXShaderGUI.cs` that pro
 ---
 
 This module includes the settings for:
- * **Main texture** and an option to change its wrap mode from **Repeat** to **Clamp**
- * **Gradient Mapping** of two custom HDR colors onto the grayscale values of the texture
- * **Intensity** setting for the entire texture to provide bloom or glow effect 
- * **Main texture scroll** on X and Y axis
+ * **Main texture** and an option to change its wrap mode from **Repeat** to **Clamp**,
+ * **Gradient Mapping** of two custom HDR colors onto the grayscale values of the texture,
+ * **Intensity** setting for the entire texture to provide bloom or glow effect,
+ * **Main texture scroll** on X and Y axis,
  * **Main texture rotation** *(setting rotation speed to 360 will result in exactly one full clockwise rotation over the particle's entire life)*
- * Option to use particle's lifetime for all time-based animations implemented in the shader *(the value goes from 0 at birth to inputed value at death, otherwise the standard game clock is used for continuous scrolling)*
+ * Option to use particle's lifetime for all time-based animations implemented in the shader *(the value goes from 0 at birth to inputed value at death, otherwise the standard game clock is used for continuous scrolling)*.
  
  For **Use Lifetime** to work correctly AgePercent in the Custom Vertex Streams must be enabled (see the Installation section).
 </details>
@@ -62,16 +62,16 @@ This module includes the settings for:
 The Distortion module allows you to warp the UV coordinates of the Main Texture. It works by offsetting the texture sampling using various noise patterns or custom textures.
 
 * You can choose between 4 different **Distortion Types**: 
-     * **2D Texture** *(uses the green channel of distortion texture)*
-     * **Gradient Noise**
-     * **Simple Noise**
-     * **Voronoi**
+     * **2D Texture** *(uses the green channel of distortion texture)*,
+     * **Gradient Noise**,
+     * **Simple Noise**,
+     * **Voronoi**,
 * **Distortion Amount**,
-* **Distortion Scroll Speed** on X and Y axis
-* **Distortion Rotation Speed**
+* **Distortion Scroll Speed** on X and Y axis,
+* **Distortion Rotation Speed**,
 * Parameters based on type selection:
-     * **Scale** of the noise patterns
-     * **Angle Offset** representing cell rotation of Voronoi
+     * **Scale** of the noise patterns,
+     * **Angle Offset** representing cell rotation of Voronoi.
 
 <img src="./Documentation/distortion.gif" height="200" />
 </details>
@@ -83,9 +83,10 @@ The Distortion module allows you to warp the UV coordinates of the Main Texture.
 
 In the Mask module you can control the transparency, allowing for complex shapes beyond the basic quad or mesh geometry.
 
-* **Mask Texture** where R channel values are converted to alpha (0 = transparent, 1 = opaque) and an option to set wrap mode to **Clamp**
-* **Mask Scroll Speed** on X and Y axis
-* **Mask Rotation Speed**
+* **Mask Texture** where R channel values are converted to alpha (0 = transparent, 1 = opaque) and an option to set wrap mode to **Clamp** to prevent the mask from tiling,
+* **Mask Gamma** adjusts the mid-tones of the mask, allowing you to "thicken" or "thin" the opaque areas without editing the source texture,
+* **Mask Scroll Speed** on X and Y axis,
+* **Mask Rotation Speed** ,
 * Toggle **Use Mask Distortion** which gives you all the same options for distortion of mask texture, just like the ones listed in the previous section.
 
 </details>
@@ -96,12 +97,13 @@ In the Mask module you can control the transparency, allowing for complex shapes
 ---
 
 The Dissolve module creates a non-linear transparency effect where the texture gradually vanishes or appears based on grayscale thresholds. If **Dissolve Over Lifetime** is disabled it can work as a secondary mask.
-* **Dissolve Texture** where B channel values determine the pattern of the dissolve
-* **Dissolve Amount** Sets the base threshold for how much of the texture is dissolved
-* **Edge Width** controls the softness of the dissolve edge *(a value of 0 results in a hard cut, while higher values create a smoother gradient at the transition boundary)*
-* **Dissolve Speed** controls the rate at which the dissolve transition occurs *(only works as intended if Dissolve Over Lifetime is enabled)*
-* if **Dissolve Over Lifetime** is enabled it dissolves the main texture based on the particle's age
-* **Invert Dissolve** flips the logic for the effect to appear rather than disappear
+* **Dissolve Texture** where B channel values determine the pattern of the dissolve,
+* **Dissolve Gamma** controls the values of the mid-tones and allows you to fine-tune the weight of the dissolve pattern,
+* **Dissolve Amount** Sets the base threshold for how much of the texture is dissolved,
+* **Edge Width** controls the softness of the dissolve edge *(a value of 0 results in a hard cut, while higher values create a smoother gradient at the transition boundary)*,
+* **Dissolve Speed** controls the rate at which the dissolve transition occurs *(only works as intended if Dissolve Over Lifetime is enabled)*,
+* if **Dissolve Over Lifetime** is enabled, it dissolves the main texture based on the particle's age,
+* **Invert Dissolve** flips the logic for the effect to appear rather than disappear.
 
 <img src="./Documentation/dissolve.gif" height="200" />
 
@@ -128,12 +130,11 @@ The Depth Fade module prevents harsh clipping lines where a particle intersects 
 
 The Fresnel module calculates transparency based on the surface normal's orientation relative to the camera's view direction. It can be used to create soft edges or ghostly, hollow appearances.
 
-* **Fresnel Power** controls the falloff of the effect. Higher values result in a tighter glow confined to the extreme edges of the mesh.
-
-* **Edge 1 and Edge 2** set the lower and upper bounds of the smoothstep function to fine-tune the contrast and softness of the rim.
+* **Fresnel Power** controls the falloff of the effect. Higher values result in a tighter glow confined to the extreme edges of the mesh,
+* **Edge 1 and Edge 2** set the lower and upper bounds of the smoothstep function to fine-tune the contrast and softness of the rim,
 * **Invert Fresnel** flips the effect logic:
-     * Disabled: fades out the edges to help the object blend naturally into the environment
-     * Enabled: accents the edges while making the center transparent
+     * Disabled: fades out the edges to help the object blend naturally into the environment,
+     * Enabled: accents the edges while making the center transparent.
 
 
 <img src="./Documentation/fresnelexample.png" height="200" />
@@ -146,9 +147,9 @@ The Fresnel module calculates transparency based on the surface normal's orienta
 
 ### Texture Channel Packing
 The shader is designed to use **Channel Packing** to reduce the number of texture assets in your project. Each module is hard-coded to sample a specific channel:
-* **Red:** Mask 
-* **Green:** Distortion 
-* **Blue:** Dissolve 
+* **Red:** Mask ,
+* **Green:** Distortion,
+* **Blue:** Dissolve.
 
 <img src="./Documentation/channelpacking.png" height="200" />
 

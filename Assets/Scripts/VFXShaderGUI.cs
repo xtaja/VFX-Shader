@@ -39,6 +39,7 @@ public class VFXShaderGUI : ShaderGUI
     MaterialProperty _UseMask;
     MaterialProperty _MaskTex;
     MaterialProperty _ClampMask;
+    MaterialProperty _MaskGamma;
     MaterialProperty _MaskScrollX;
     MaterialProperty _MaskScrollY;
     MaterialProperty _MaskRotation;
@@ -58,6 +59,7 @@ public class VFXShaderGUI : ShaderGUI
     MaterialProperty _InvertDissolve;
     MaterialProperty _DissolveTex;
     MaterialProperty _DissolveAmount;
+    MaterialProperty _DissolveGamma;
     MaterialProperty _EdgeWidth;   
     MaterialProperty _UseDissolveOverLife;
     MaterialProperty _DissolveSpeed;
@@ -110,6 +112,7 @@ public class VFXShaderGUI : ShaderGUI
         _UseMask = FindProperty("_Mask", properties, false);
         _MaskTex = FindProperty("_Mask_Texture", properties, false);
         _ClampMask = FindProperty("_Clamp_Mask", properties, false);
+        _MaskGamma = FindProperty("_Mask_Gamma", properties, false);
         _MaskScrollX = FindProperty("_Mask_Scroll_Speed_X", properties, false);
         _MaskScrollY = FindProperty("_Mask_Scroll_Speed_Y", properties, false);
         _MaskRotation = FindProperty("_Mask_Rotation_Speed", properties, false);
@@ -126,6 +129,7 @@ public class VFXShaderGUI : ShaderGUI
         _UseDissolve = FindProperty("_Dissolve", properties, false);
         _InvertDissolve = FindProperty("_Invert_Dissolve", properties, false);
         _DissolveTex = FindProperty("_Dissolve_Texture", properties, false);
+        _DissolveGamma = FindProperty("_Dissolve_Gamma", properties, false);
         _DissolveAmount = FindProperty("_Dissolve_Amount", properties, false);
         _EdgeWidth = FindProperty("_Edge_Width", properties, false);
         _UseDissolveOverLife = FindProperty("_Dissolve_Over_Lifetime", properties, false);
@@ -165,11 +169,20 @@ public class VFXShaderGUI : ShaderGUI
         EditorGUILayout.EndVertical();
        
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DISTORTION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+        EditorGUI.BeginChangeCheck();
         EditorGUILayout.BeginHorizontal("button");
         bool distortionEnabled = _UseDistortion.floatValue == 1f;
         distortionEnabled = GUILayout.Toggle(distortionEnabled,"",GUILayout.MaxWidth(17));
-        _UseDistortion.floatValue = distortionEnabled ? 1f : 0f;
+        if (EditorGUI.EndChangeCheck())
+        {
+            _UseDistortion.floatValue = distortionEnabled ? 1f : 0f;
+            foreach (var obj in _UseDistortion.targets)
+            {
+                Material matInstance = (Material)obj;
+                if (distortionEnabled) matInstance.EnableKeyword("_DISTORTION_ON");
+                else matInstance.DisableKeyword("_DISTORTION_ON");
+            }
+        }
 
         if(GUILayout.Button("Distortion", EditorStyles.boldLabel))
         {
@@ -246,10 +259,20 @@ public class VFXShaderGUI : ShaderGUI
         
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ MASK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        EditorGUI.BeginChangeCheck();
         EditorGUILayout.BeginHorizontal("button");
         bool maskEnabled = _UseMask.floatValue == 1f;
         maskEnabled = GUILayout.Toggle(maskEnabled,"",GUILayout.MaxWidth(17));
-        _UseMask.floatValue = maskEnabled ? 1f : 0f;
+        if (EditorGUI.EndChangeCheck())
+        {
+            _UseMask.floatValue = maskEnabled ? 1f : 0f;
+            foreach (var obj in _UseMask.targets)
+            {
+                Material matInstance = (Material)obj;
+                if (maskEnabled) matInstance.EnableKeyword("_MASK_ON");
+                else matInstance.DisableKeyword("_MASK_ON");
+            }
+        }
 
         if(GUILayout.Button("Mask", EditorStyles.boldLabel))
         {
@@ -266,6 +289,7 @@ public class VFXShaderGUI : ShaderGUI
 
             DrawIfValid(materialEditor, _MaskTex);
             DrawIfValid(materialEditor,_ClampMask);
+            DrawIfValid(materialEditor, _MaskGamma);
             DrawIfValid(materialEditor, _MaskScrollX); 
             DrawIfValid(materialEditor, _MaskScrollY); 
             DrawIfValid(materialEditor, _MaskRotation);
@@ -340,10 +364,20 @@ public class VFXShaderGUI : ShaderGUI
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DISSOLVE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        EditorGUI.BeginChangeCheck();
         EditorGUILayout.BeginHorizontal("button");
         bool dissolveEnabled = _UseDissolve.floatValue == 1f;
         dissolveEnabled = GUILayout.Toggle(dissolveEnabled,"",GUILayout.MaxWidth(17));
-        _UseDissolve.floatValue = dissolveEnabled ? 1f : 0f;
+        if (EditorGUI.EndChangeCheck())
+        {
+            _UseDissolve.floatValue = dissolveEnabled ? 1f : 0f;
+            foreach (var obj in _UseDissolve.targets)
+            {
+                Material matInstance = (Material)obj;
+                if (dissolveEnabled) matInstance.EnableKeyword("_DISSOLVE_ON");
+                else matInstance.DisableKeyword("_DISSOLVE_ON");
+            }
+        }
 
         if(GUILayout.Button("Dissolve", EditorStyles.boldLabel))
         {
@@ -360,6 +394,7 @@ public class VFXShaderGUI : ShaderGUI
 
             DrawIfValid(materialEditor, _InvertDissolve);
             DrawIfValid(materialEditor, _DissolveTex);
+            DrawIfValid(materialEditor, _DissolveGamma);
             DrawIfValid(materialEditor, _DissolveAmount);
             DrawIfValid(materialEditor, _EdgeWidth);
 
@@ -374,10 +409,20 @@ public class VFXShaderGUI : ShaderGUI
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEPTH FADE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
+        EditorGUI.BeginChangeCheck();
         EditorGUILayout.BeginHorizontal("button");
         bool depthfadeEnabled = _UseDepthFade.floatValue == 1f;
         depthfadeEnabled = GUILayout.Toggle(depthfadeEnabled,"",GUILayout.MaxWidth(17));
-        _UseDepthFade.floatValue = depthfadeEnabled ? 1f : 0f;
+        if (EditorGUI.EndChangeCheck())
+        {
+            _UseDepthFade.floatValue = depthfadeEnabled ? 1f : 0f;
+            foreach (var obj in _UseDepthFade.targets)
+            {
+                Material matInstance = (Material)obj;
+                if (depthfadeEnabled) matInstance.EnableKeyword("_DEPTH_FADE_ON");
+                else matInstance.DisableKeyword("_DEPTH_FADE_ON");
+            }
+        }
 
         if(GUILayout.Button("Depth Fade", EditorStyles.boldLabel))
         {
@@ -399,11 +444,20 @@ public class VFXShaderGUI : ShaderGUI
         }
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FRESNEL ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+        EditorGUI.BeginChangeCheck();
         EditorGUILayout.BeginHorizontal("button");
         bool fresnelEnabled = _Fresnel.floatValue == 1f;
         fresnelEnabled = GUILayout.Toggle(fresnelEnabled,"",GUILayout.MaxWidth(17));
-        _Fresnel.floatValue = fresnelEnabled ? 1f : 0f;
+        if (EditorGUI.EndChangeCheck())
+        {
+            _Fresnel.floatValue = fresnelEnabled ? 1f : 0f;
+            foreach (var obj in _Fresnel.targets)
+            {
+                Material matInstance = (Material)obj;
+                if (fresnelEnabled) matInstance.EnableKeyword("_FRESNEL_ON");
+                else matInstance.DisableKeyword("_FRESNEL_ON");
+            }
+        }
 
         if(GUILayout.Button("Fresnel", EditorStyles.boldLabel))
         {
